@@ -1,5 +1,5 @@
 import { Menu, MenuItem, App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
-import open from "open";
+import { spawn } from "child_process";
 
 // Remember to rename these classes and interfaces!
 
@@ -19,16 +19,19 @@ export default class MyPlugin extends Plugin {
 			item
 				.setTitle("Open with Zathura")
 				.setIcon("popup-open")
-				.onClick(() => open(file.path))
+				.onClick(() => {
+					//@ts-ignore
+					let path = this.app.vault.adapter.basePath + '/' + file.path;
+					spawn("zathura", [path]);
+				})
 		});
 	};
 
 	async onload() {
-		await this.loadSettings();
-
 		this.registerEvent(this.app.workspace.on("file-menu", this.fileMenuHandler));
 
-
+		//await this.loadSettings();
+		/*
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
@@ -89,6 +92,7 @@ export default class MyPlugin extends Plugin {
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		*/
 	}
 
 	onunload() {

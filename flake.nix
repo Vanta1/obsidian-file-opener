@@ -15,9 +15,10 @@
       in {
         devShell = with pkgs;
           mkShell {
-            buildInputs = [
-              nodejs_22
+            nativeBuildInputs = with nixpkgs; [
+              nodePackages.typescript
               nodePackages.prettier
+              nodejs
             ];
           };
       }
